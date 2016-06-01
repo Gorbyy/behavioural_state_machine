@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 
-import roslib; roslib.load_manifest('learning_actionlib')
+import roslib;
 import rospy
 import smach
 import smach_ros
 from std_msgs.msg import String
 
 import actionlib
-import learning_actionlib.msg
 import move_robot_msgs.msg
 
 

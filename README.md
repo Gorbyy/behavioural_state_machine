@@ -4,7 +4,7 @@ To use package with real robot:
 
 1. Edit connect_node.py to select DB ip.
 2. Run connect_node.py to read from MondoDB and publish events on a topic.
-3. Run main script of the s_m.
+3. Run main script of the state machine.
 
 
 To use package in simulation:
