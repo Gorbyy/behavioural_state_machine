@@ -1,8 +1,11 @@
 #goal definition
-int32[] limits
+int32 amplitude
+int32 position
 ---
 #result definition
-int32 res
+int32[] x
+float32[] y
+float32[] z
 ---
 #feedback
 int32 feed
