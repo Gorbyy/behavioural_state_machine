@@ -1,6 +1,5 @@
 #goal definition
-int32 amplitude
-int32 position
+string movement
 ---
 #result definition
 int32[] x

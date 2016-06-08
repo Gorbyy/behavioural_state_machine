@@ -2,6 +2,8 @@
 
 import numpy as np # to work with numerical data efficiently
 import matplotlib.pyplot as plt
+import rospy
+import sensor_msgs.msg
 
 amplitude = 200
 limitmax = amplitude/2
@@ -31,3 +33,31 @@ plt.plot(x, -y)
 plt.xlabel('sample(n)')
 plt.ylabel('angle')
 plt.show()
+
+
+#index on the msg joint_states
+eyes_tilt_joint = 2
+neck_pan_joint = 17
+neck_tilt_joint = 18
+version_joint = 32
+
+#neck limits (degrees)
+neck_pan_max = 53
+neck_pan_min = -53
+neck_tilt_max = 37
+neck_tilt_min = -18
+
+#eyes limits (degrees)
+eye_max=38
+eye_min=-38
+
+
+
+
+try:
+    cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
+    print cena
+except(rospy.ROSException), e:
+    print "Laser scan topic not available, aborting..."
+    print "Error message: ", e
+    exit()

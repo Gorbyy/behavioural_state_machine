@@ -15,7 +15,7 @@ def teste_client():
     client.wait_for_server()
 
     # Creates a goal to send to the action server.
-    goal = behavioural_state_machine.msg.TesteGoal(amplitude=200, position=50)
+    goal = behavioural_state_machine.msg.TesteGoal(movement = 'y')
 
     # Sends the goal to the action server.
     client.send_goal(goal)

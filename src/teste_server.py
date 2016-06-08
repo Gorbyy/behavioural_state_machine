@@ -7,6 +7,46 @@ import behavioural_state_machine.msg
 import numpy as np # to work with numerical data efficiently
 import matplotlib.pyplot as plt
 
+
+
+
+
+fs = 100 # sample rate 
+f = 3 # the frequency of the signal
+
+
+
+
+#index on the msg joint_states
+eyes_tilt_joint = 2
+neck_pan_joint = 17
+neck_tilt_joint = 18
+version_joint = 32
+
+#neck limits (degrees)
+neck_pan_max = 53
+neck_pan_min = -53
+neck_tilt_max = 37
+neck_tilt_min = -18
+neck_yes_amplitude = neck_tilt_max - neck_tilt_min
+neck_no_amplitude = neck_pan_max - neck_pan_max
+
+#eyes limits (degrees)
+eyes_max=38
+eyes_min=-38
+eyes_amplitude = eyes_max - eyes_min
+
+
+
+
+
+
+
+
+
+
+
+
 class TesteAction(object):
   # create messages that are used to publish feedback/result
   _feedback = behavioural_state_machine.msg.TesteFeedback()
@@ -26,25 +66,43 @@ class TesteAction(object):
     self._feedback.feed = 0
     
     # publish info to the console for the user
-    print('goal.amplitude: {}, goal.position: {}'.format(goal.amplitude, goal.position))
+    print('goal.movement: {}'.format(goal.movement))
 
 
     self._feedback.feed = 1;      
 
-    fs = 500 # sample rate 
-    f = 3 # the frequency of the signal
-    limitmax = goal.amplitude/2
-    limitmin = -goal.amplitude/2
 
-    x = np.arange(fs) # the points on the x axis for plotting
-    # compute the value (amplitude) of the sin wave at the for each sample
-    y = np.sin(2*np.pi*f * x / fs)*(goal.amplitude/2) + goal.position
+    if goal.movement == 'y':
 
-    for i in range(len(y)):
-      if y[i] > limitmax:
-        y[i] = limitmax
-      elif y[i] < limitmin:
-        y[i] = limitmin
+      x = np.arange(fs) # the points on the x axis for plotting
+      # compute the value (amplitude) of the sin wave at the for each sample
+      y = np.sin(2*np.pi*f * x / fs)*(neck_yes_amplitude/2) + neck_tilt_joint#position
+
+      for i in range(len(y)):
+        if y[i] > neck_tilt_max:
+          y[i] = neck_tilt_max
+        elif y[i] < neck_tilt_min:
+          y[i] = neck_tilt_min
+
+    elif goal.movement == 'n':
+
+      x = np.arange(fs) # the points on the x axis for plotting
+      # compute the value (amplitude) of the sin wave at the for each sample
+      y = np.sin(2*np.pi*f * x / fs)*(neck_no_amplitude/2) + neck_pan_joint#position
+
+      for i in range(len(y)):
+        if y[i] > neck_pan_max:
+          y[i] = neck_pan_max
+        elif y[i] < neck_pan_min:
+          y[i] = neck_pan_min
+
+
+
+
+
+
+
+
 
     # check that preempt has not been requested by the client
     if self._as.is_preempt_requested():
