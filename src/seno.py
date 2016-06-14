@@ -51,8 +51,33 @@ neck_tilt_min = -18
 eye_max=38
 eye_min=-38
 
+try:
+    cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
+    print cena
+except(rospy.ROSException), e:
+    print "Laser scan topic not available, aborting..."
+    print "Error message: ", e
 
+try:
+    cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
+    print cena
+except(rospy.ROSException), e:
+    print "Laser scan topic not available, aborting..."
+    print "Error message: ", e
 
+try:
+    cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
+    print cena
+except(rospy.ROSException), e:
+    print "Laser scan topic not available, aborting..."
+    print "Error message: ", e
+
+try:
+    cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
+    print cena
+except(rospy.ROSException), e:
+    print "Laser scan topic not available, aborting..."
+    print "Error message: ", e
 
 try:
     cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
