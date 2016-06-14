@@ -73,7 +73,6 @@ def main():
 	# anonymous=True flag means that rospy will choose a unique
 	# name for our 'listener' node so that multiple listeners can
 	# run simultaneously.
-	print 'ola'
 	rospy.init_node('listener', anonymous=True)
 	rospy.Subscriber('chat', String, cb_once)
 	#msg = rospy.wait_for_message('chat', String)
