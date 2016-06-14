@@ -4,6 +4,7 @@ import numpy as np # to work with numerical data efficiently
 import matplotlib.pyplot as plt
 import rospy
 import sensor_msgs.msg
+from std_msgs.msg import String
 
 amplitude = 200
 limitmax = amplitude/2
@@ -51,38 +52,34 @@ neck_tilt_min = -18
 eye_max=38
 eye_min=-38
 
-try:
-    cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
-    print cena
-except(rospy.ROSException), e:
-    print "Laser scan topic not available, aborting..."
-    print "Error message: ", e
 
-try:
-    cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
-    print cena
-except(rospy.ROSException), e:
-    print "Laser scan topic not available, aborting..."
-    print "Error message: ", e
+#try:
+#    cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
+#    print cena
+#except(rospy.ROSException), e:
+#    print "Laser scan topic not available, aborting..."
+#    print "Error message: ", e
 
-try:
-    cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
-    print cena
-except(rospy.ROSException), e:
-    print "Laser scan topic not available, aborting..."
-    print "Error message: ", e
 
-try:
-    cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
-    print cena
-except(rospy.ROSException), e:
-    print "Laser scan topic not available, aborting..."
-    print "Error message: ", e
 
-try:
-    cena = rospy.wait_for_message('/vizzy/joint_states', sensor_msgs.msg.JointState, timeout=10)
-    print cena
-except(rospy.ROSException), e:
-    print "Laser scan topic not available, aborting..."
-    print "Error message: ", e
-    exit()
+def cb_once(msg):
+	 rospy.loginfo(rospy.get_caller_id() + 'I heard %s', msg.data)
+
+
+def main():
+
+	# In ROS, nodes are uniquely named. If two nodes with the same
+	# name are launched, the previous one is kicked off. The
+	# anonymous=True flag means that rospy will choose a unique
+	# name for our 'listener' node so that multiple listeners can
+	# run simultaneously.
+	print 'ola'
+	rospy.init_node('listener', anonymous=True)
+	rospy.Subscriber('chat', String, cb_once)
+	#msg = rospy.wait_for_message('chat', String)
+
+	# spin() simply keeps python from exiting until this node is stopped
+	rospy.spin()
+
+if __name__ == '__main__':
+	main()

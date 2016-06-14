@@ -7,10 +7,10 @@ project(behavioural_state_machine)
 find_package(catkin REQUIRED COMPONENTS
   actionlib
   actionlib_msgs
+  message_generation
   roscpp
   rospy
   std_msgs
-  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -102,7 +102,7 @@ catkin_package(
 #  INCLUDE_DIRS include
   LIBRARIES behavioural_state_machine
   CATKIN_DEPENDS actionlib actionlib_msgs message_runtime roscpp rospy std_msgs
-  DEPENDS system_lib
+#  DEPENDS system_lib
 )
 
 ###########
