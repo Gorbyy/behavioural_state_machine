@@ -6,6 +6,9 @@ import actionlib
 import behavioural_state_machine.msg
 import numpy as np # to work with numerical data efficiently
 import matplotlib.pyplot as plt
+from sensor_msgs.msg import JointState
+from behavioural_state_machine.msg import trajectory
+
 
 
 
@@ -39,22 +42,15 @@ eyes_amplitude = eyes_max - eyes_min
 
 
 def cb_once(msg):
-	rospy.loginfo(rospy.get_caller_id() + ' I heard %s', msg.data)
-	rospy.signal_shutdown("shutting down")
+	global var
+	var = msg.position
+	sub_once.unregister()
+
 
 def listener():
-
-	# In ROS, nodes are uniquely named. If two nodes with the same
-	# name are launched, the previous one is kicked off. The
-	# anonymous=True flag means that rospy will choose a unique
-	# name for our 'listener' node so that multiple listeners can
-	# run simultaneously.
-	rospy.init_node('listener', anonymous=True)
-	rospy.Subscriber('chat', String, cb_once)
-	#msg = rospy.wait_for_message('chat', String)
-
-	# spin() simply keeps python from exiting until this node is stopped
-	rospy.spin()
+	global sub_once
+	sub_once = rospy.Subscriber('/vizzy/joint_states', JointState, cb_once)
+	rospy.wait_for_message('/vizzy/joint_states', JointState)
 
 
 
@@ -92,7 +88,7 @@ class TesteAction(object):
 
 			x = np.arange(fs) # the points on the x axis for plotting
 			# compute the value (amplitude) of the sin wave at the for each sample
-			y = np.sin(2*np.pi*f * x / fs)*(neck_yes_amplitude/2) + neck_tilt_joint#position
+			y = np.sin(2*np.pi*f * x / fs)*(neck_yes_amplitude/2) + (var[neck_tilt_joint]*180/np.pi) #position in degrees
 
 			for i in range(len(y)):
 				if y[i] > neck_tilt_max:
@@ -104,7 +100,7 @@ class TesteAction(object):
 
 			x = np.arange(fs) # the points on the x axis for plotting
 			# compute the value (amplitude) of the sin wave at the for each sample
-			y = np.sin(2*np.pi*f * x / fs)*(neck_no_amplitude/2) + neck_pan_joint#position
+			y = np.sin(2*np.pi*f * x / fs)*(neck_no_amplitude/2) + (var[neck_pan_joint]*180/np.pi)#position
 
 			for i in range(len(y)):
 				if y[i] > neck_pan_max:
@@ -137,6 +133,12 @@ class TesteAction(object):
 			plt.ylabel('angle')
 			plt.show()
 			self._as.set_succeeded(self._result)
+
+			pub = rospy.Publisher('traj', trajectory, queue_size=10)
+			#"{name:[Some words, More words], value:[1.1, 2.2]}"
+			pub.publish(mov= goal.movement, neck= y, eyes= -y)
+
+
 			
 if __name__ == '__main__':
 	rospy.init_node('teste')

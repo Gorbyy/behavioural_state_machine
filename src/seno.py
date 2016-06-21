@@ -3,8 +3,7 @@
 import numpy as np # to work with numerical data efficiently
 import matplotlib.pyplot as plt
 import rospy
-import sensor_msgs.msg
-from std_msgs.msg import String
+from sensor_msgs.msg import JointState
 
 amplitude = 200
 limitmax = amplitude/2
@@ -63,8 +62,10 @@ eye_min=-38
 
 
 def cb_once(msg):
-	rospy.loginfo(rospy.get_caller_id() + ' I heard %s', msg.data)
-	rospy.signal_shutdown("shutting down")
+	global var
+	var = msg.position
+	sub_once.unregister()
+	#rospy.signal_shutdown("shutting down")
 
 def listener():
 
@@ -73,12 +74,28 @@ def listener():
 	# anonymous=True flag means that rospy will choose a unique
 	# name for our 'listener' node so that multiple listeners can
 	# run simultaneously.
-	rospy.init_node('listener', anonymous=True)
-	rospy.Subscriber('chat', String, cb_once)
-	#msg = rospy.wait_for_message('chat', String)
+	#rospy.init_node('listener', anonymous=True)
+	global sub_once
+	sub_once = rospy.Subscriber('/vizzy/joint_states', JointState, cb_once)
+	rospy.wait_for_message('/vizzy/joint_states', JointState)
 
 	# spin() simply keeps python from exiting until this node is stopped
-	rospy.spin()
+	#rospy.spin()
+
+
+def talker():
+	pub = rospy.Publisher('traj', JointState, queue_size=10)
+	pub.publish(var)
+
+
+
+
+def main():
+	rospy.init_node('listener', anonymous=True)
+	listener()
+	talker()
+
+
 
 if __name__ == '__main__':
-	listener()
+	main()
