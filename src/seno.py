@@ -63,10 +63,10 @@ eye_min=-38
 
 
 def cb_once(msg):
-	 rospy.loginfo(rospy.get_caller_id() + 'I heard %s', msg.data)
+	rospy.loginfo(rospy.get_caller_id() + ' I heard %s', msg.data)
+	rospy.signal_shutdown("shutting down")
 
-
-def main():
+def listener():
 
 	# In ROS, nodes are uniquely named. If two nodes with the same
 	# name are launched, the previous one is kicked off. The
@@ -81,4 +81,4 @@ def main():
 	rospy.spin()
 
 if __name__ == '__main__':
-	main()
+	listener()
