@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 import rospy
 from sensor_msgs.msg import JointState
 
-amplitude = 200
+amplitude = 200*np.pi/180
 limitmax = amplitude/2
 limitmin = -amplitude/2
 
-position = 50
+position = 50*np.pi/180
 
 
 
@@ -61,11 +61,22 @@ eye_min=-38
 
 
 
+
 def cb_once(msg):
 	global var
-	var = msg.position
-	sub_once.unregister()
+	global i
+	var = msg
+	pub = rospy.Publisher('traj', JointState, queue_size=10)
+	pub.publish(var)
+	
+
+	if i == 0:
+		sub_once.unregister()
+		rospy.signal_shutdown("shutting down")
 	#rospy.signal_shutdown("shutting down")
+
+
+	i=i+1
 
 def listener():
 
@@ -83,9 +94,8 @@ def listener():
 	#rospy.spin()
 
 
-def talker():
-	pub = rospy.Publisher('traj', JointState, queue_size=10)
-	pub.publish(var)
+#def talker():
+
 
 
 
@@ -93,7 +103,10 @@ def talker():
 def main():
 	rospy.init_node('listener', anonymous=True)
 	listener()
-	talker()
+#	talker()
+	global i
+	i = 0;
+	rospy.spin()
 
 
 

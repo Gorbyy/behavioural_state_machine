@@ -26,17 +26,17 @@ neck_pan_joint = 17
 neck_tilt_joint = 18
 version_joint = 32
 
-#neck limits (degrees)
-neck_pan_max = 53
-neck_pan_min = -53
-neck_tilt_max = 37
-neck_tilt_min = -18
+#neck limits (radian)
+neck_pan_max = 53*np.pi/180
+neck_pan_min = -53*np.pi/180
+neck_tilt_max = 37*np.pi/180
+neck_tilt_min = -18*np.pi/180
 neck_yes_amplitude = neck_tilt_max - neck_tilt_min
 neck_no_amplitude = neck_pan_max - neck_pan_max
 
-#eyes limits (degrees)
-eyes_max=38
-eyes_min=-38
+#eyes limits (radian)
+eyes_max=38*np.pi/180
+eyes_min=-38*np.pi/180
 eyes_amplitude = eyes_max - eyes_min
 
 
@@ -88,7 +88,7 @@ class TesteAction(object):
 
 			x = np.arange(fs) # the points on the x axis for plotting
 			# compute the value (amplitude) of the sin wave at the for each sample
-			y = np.sin(2*np.pi*f * x / fs)*(neck_yes_amplitude/2) + (var[neck_tilt_joint]*180/np.pi) #position in degrees
+			y = np.sin(2*np.pi*f * x / fs)*(neck_yes_amplitude/2) + var[neck_tilt_joint] #position in degrees
 
 			for i in range(len(y)):
 				if y[i] > neck_tilt_max:
@@ -100,7 +100,7 @@ class TesteAction(object):
 
 			x = np.arange(fs) # the points on the x axis for plotting
 			# compute the value (amplitude) of the sin wave at the for each sample
-			y = np.sin(2*np.pi*f * x / fs)*(neck_no_amplitude/2) + (var[neck_pan_joint]*180/np.pi)#position
+			y = np.sin(2*np.pi*f * x / fs)*(neck_no_amplitude/2) + var[neck_pan_joint]#position
 
 			for i in range(len(y)):
 				if y[i] > neck_pan_max:
@@ -135,8 +135,14 @@ class TesteAction(object):
 			self._as.set_succeeded(self._result)
 
 			pub = rospy.Publisher('traj', trajectory, queue_size=10)
+
+			cena = behavioural_state_machine.msg.trajectory()
+
+			cena.mov = goal.movement
+			cena.neck = y
+			cena.eyes = -y
 			#"{name:[Some words, More words], value:[1.1, 2.2]}"
-			pub.publish(mov= goal.movement, neck= y, eyes= -y)
+			pub.publish(cena)
 
 
 			
