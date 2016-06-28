@@ -8,6 +8,7 @@ import numpy as np # to work with numerical data efficiently
 import matplotlib.pyplot as plt
 from sensor_msgs.msg import JointState
 from behavioural_state_machine.msg import trajectory
+import time
 
 
 
@@ -32,7 +33,7 @@ neck_pan_min = -53*np.pi/180
 neck_tilt_max = 37*np.pi/180
 neck_tilt_min = -18*np.pi/180
 neck_yes_amplitude = neck_tilt_max - neck_tilt_min
-neck_no_amplitude = neck_pan_max - neck_pan_max
+neck_no_amplitude = (neck_pan_max - neck_pan_min) /2
 
 #eyes limits (radian)
 eyes_max=38*np.pi/180
@@ -137,12 +138,13 @@ class TesteAction(object):
 			pub = rospy.Publisher('traj', trajectory, queue_size=10)
 
 			cena = behavioural_state_machine.msg.trajectory()
-
 			cena.mov = goal.movement
-			cena.neck = y
-			cena.eyes = -y
-			#"{name:[Some words, More words], value:[1.1, 2.2]}"
-			pub.publish(cena)
+			for i in range(len(y)):
+				cena.neck = y[i]
+				cena.eyes = -y[i]
+				pub.publish(cena)
+				print ('sending {}...'.format(cena.mov))
+				time.sleep(0.1)
 
 
 			

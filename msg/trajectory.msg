@@ -1,3 +1,3 @@
 string mov
-float32[] neck
-float32[] eyes
+float32 neck
+float32 eyes

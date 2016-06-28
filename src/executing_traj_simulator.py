@@ -5,25 +5,18 @@ import rospy
 from behavioural_state_machine.msg import trajectory
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Float64
-import time
-
 
 def cb_once(msg):
 
-	print 'executing...'
-
+	print ('executing')
 	if msg.mov == 'y':
-		for i in range(len(msg.neck)):
-			pub1.publish(msg.neck[i])
-			pub2.publish(-msg.eyes[i])
-			print 'executing yes...'
-			time.sleep(0.1) 
+		pub1.publish(msg.neck)
+		pub2.publish(-msg.eyes)
+
 	if msg.mov == 'n':
-		for i in range(len(msg.neck)):
-			pub3.publish(msg.neck[i])
-			pub4.publish(msg.eyes[i])
-			print 'executing no...'
-			time.sleep(0.1)
+		pub3.publish(msg.neck)
+		pub4.publish(msg.eyes)
+
 
 def main():
 
