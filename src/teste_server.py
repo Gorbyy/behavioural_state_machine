@@ -66,8 +66,8 @@ class TesteAction(object):
 	def __init__(self, name):
 		self._action_name = name
 		self._as = actionlib.SimpleActionServer(self._action_name,
-																						behavioural_state_machine.msg.TesteAction, 
-																						execute_cb=self.execute_cb, auto_start = False)
+												behavioural_state_machine.msg.TesteAction, 
+												execute_cb=self.execute_cb, auto_start = False)
 		self._as.start()
 
 	def execute_cb(self, goal):
