@@ -149,6 +149,6 @@ class TesteAction(object):
 
 			
 if __name__ == '__main__':
-	rospy.init_node('teste')
+	rospy.init_node('yesno')
 	TesteAction(rospy.get_name())
 	rospy.spin()
