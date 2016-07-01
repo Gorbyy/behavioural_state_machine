@@ -84,10 +84,11 @@ class TesteAction(object):
 
 		listener()
 
+		x = np.arange(fs) # the points on the x axis for plotting
+		z = []
 
 		if goal.movement == 'y':
 
-			x = np.arange(fs) # the points on the x axis for plotting
 			# compute the value (amplitude) of the sin wave at the for each sample
 			y = np.sin(2*np.pi*f * x / fs)*(neck_yes_amplitude/2) + var[neck_tilt_joint] #position in degrees
 
@@ -96,10 +97,10 @@ class TesteAction(object):
 					y[i] = neck_tilt_max
 				elif y[i] < neck_tilt_min:
 					y[i] = neck_tilt_min
+				z.append(-y[i] - var[neck_tilt_joint] + var[eyes_tilt_joint])
 
 		elif goal.movement == 'n':
 
-			x = np.arange(fs) # the points on the x axis for plotting
 			# compute the value (amplitude) of the sin wave at the for each sample
 			y = np.sin(2*np.pi*f * x / fs)*(neck_no_amplitude/2) + var[neck_pan_joint]#position
 
@@ -108,7 +109,7 @@ class TesteAction(object):
 					y[i] = neck_pan_max
 				elif y[i] < neck_pan_min:
 					y[i] = neck_pan_min
-
+				z.append(-y[i] - var[neck_pan_joint] + var[version_joint])
 
 
 
@@ -126,7 +127,7 @@ class TesteAction(object):
 		if success:
 			self._result.x = x
 			self._result.y = y
-			self._result.z = -y
+			self._result.z = z
 			print('%s: succeeded' % self._action_name)
 			plt.plot(self._result.x, self._result.y)
 			plt.plot(self._result.x, self._result.z)
@@ -141,7 +142,7 @@ class TesteAction(object):
 			cena.mov = goal.movement
 			for i in range(len(y)):
 				cena.neck = y[i]
-				cena.eyes = -y[i]
+				cena.eyes = z[i]
 				pub.publish(cena)
 				print ('sending {}...'.format(cena.mov))
 				time.sleep(0.1)

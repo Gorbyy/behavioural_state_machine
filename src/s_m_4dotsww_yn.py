@@ -93,13 +93,13 @@ def monitor_cb4(ud, msg):
         return True
 
 def monitor_cb_yes(ud, msg):
-    if msg.data == 'A DEFINIR':
+    if msg.data == 'Confident_1':
         return False
     else:
         return True
 
 def monitor_cb_no(ud, msg):
-    if msg.data == 'A DEFINIR':
+    if msg.data == 'Stop':
         return False
     else:
         return True
@@ -226,7 +226,7 @@ def main():
 
 
     base = smach.Concurrence(outcomes=['looking1', 'looking2', 'looking3', 'looking4',
-                                        'moivng_yes', 'moving_no','base_reset'],
+                                        'moving_yes', 'moving_no','base_reset'],
                                             default_outcome='base_reset',
                                             child_termination_cb=child_term_cb,
                                             outcome_cb=out_cb)
