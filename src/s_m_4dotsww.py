@@ -66,19 +66,19 @@ def monitor_cb1(ud, msg):
         return True
 
 def monitor_cb2(ud, msg):
-    if msg.data == 'Go_out':
-        return False
-    else:
-        return True
-
-def monitor_cb3(ud, msg):
     if msg.data == 'Pay_attention':
         return False
     else:
         return True
 
-def monitor_cb4(ud, msg):
+def monitor_cb3(ud, msg):
     if msg.data == 'Have_a_question':
+        return False
+    else:
+        return True
+
+def monitor_cb4(ud, msg):
+    if msg.data == 'Go_out':
         return False
     else:
         return True

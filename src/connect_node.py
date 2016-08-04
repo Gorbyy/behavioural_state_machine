@@ -26,7 +26,7 @@ def talker():
 	while cursor.alive:
 	    try:
 	        doc = cursor.next()
-	        if doc["confidence"] > 0.1:
+	        if doc["confidence"] > 0.18:
 	        	rospy.loginfo(doc["gesture"])
 	        	pub.publish(doc["gesture"])
 	    except StopIteration:
