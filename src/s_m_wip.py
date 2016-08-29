@@ -7,7 +7,7 @@ import smach_ros
 from std_msgs.msg import String
 
 import actionlib
-import move_robot_msgs.msg
+import vizzy_msgs.msg
 
 
 
@@ -98,14 +98,14 @@ def monitor_cb5(ud, msg):
 def gazeclient(x,y,z,w,tol):
 	# Creates the SimpleActionClient, passing the type of the action
 	# to the constructor.
-	client = actionlib.SimpleActionClient('gaze', move_robot_msgs.msg.GazeAction)
+	client = actionlib.SimpleActionClient('gaze', vizzy_msgs.msg.GazeAction)
 
 	# Waits until the action server has started up and started
 	# listening for goals.
 	client.wait_for_server()
 
-	goal = move_robot_msgs.msg.GazeGoal()
-	goal.type = move_robot_msgs.msg.GazeGoal.CARTESIAN
+	goal = vizzy_msgs.msg.GazeGoal()
+	goal.type = vizzy_msgs.msg.GazeGoal.CARTESIAN
 	if tol != 0:
 		goal.fixation_point_error_tolerance = tol
 	else:

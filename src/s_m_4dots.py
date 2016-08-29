@@ -7,7 +7,7 @@ import smach_ros
 from std_msgs.msg import String
 
 import actionlib
-import move_robot_msgs.msg
+import vizzy_msgs.msg
 
 
 class Setup(smach.State):
@@ -60,19 +60,19 @@ def monitor_cb1(ud, msg):
         return True
 
 def monitor_cb2(ud, msg):
-    if msg.data == 'Go_out':
-        return False
-    else:
-        return True
-
-def monitor_cb3(ud, msg):
     if msg.data == 'Pay_attention':
         return False
     else:
         return True
 
-def monitor_cb4(ud, msg):
+def monitor_cb3(ud, msg):
     if msg.data == 'Have_a_question':
+        return False
+    else:
+        return True
+
+def monitor_cb4(ud, msg):
+    if msg.data == 'Go_out':
         return False
     else:
         return True
@@ -121,8 +121,8 @@ def main():
 
 
         def goal_callback1(userdata, default_goal):
-			goal = move_robot_msgs.msg.GazeGoal()
-			goal.type = move_robot_msgs.msg.GazeGoal.CARTESIAN
+			goal = vizzy_msgs.msg.GazeGoal()
+			goal.type = vizzy_msgs.msg.GazeGoal.CARTESIAN
 			goal.fixation_point_error_tolerance = 0.01
 			goal.fixation_point.point.x = 2
 			goal.fixation_point.point.y = 0
@@ -132,7 +132,7 @@ def main():
 			return goal
 
         smach.StateMachine.add('GOAL_1',
-                                smach_ros.SimpleActionState('gaze', move_robot_msgs.msg.GazeAction,
+                                smach_ros.SimpleActionState('gaze', vizzy_msgs.msg.GazeAction,
                                                         goal_cb = goal_callback1),
                                 {'succeeded':'BASE',
                                  'preempted':'done',
@@ -143,8 +143,8 @@ def main():
 
 
         def goal_callback2(userdata, default_goal):
-			goal = move_robot_msgs.msg.GazeGoal()
-			goal.type = move_robot_msgs.msg.GazeGoal.CARTESIAN
+			goal = vizzy_msgs.msg.GazeGoal()
+			goal.type = vizzy_msgs.msg.GazeGoal.CARTESIAN
 			goal.fixation_point_error_tolerance = 0.01
 			goal.fixation_point.point.x = 2
 			goal.fixation_point.point.y = 0
@@ -154,7 +154,7 @@ def main():
 			return goal
 
         smach.StateMachine.add('GOAL_2',
-                                smach_ros.SimpleActionState('gaze', move_robot_msgs.msg.GazeAction,
+                                smach_ros.SimpleActionState('gaze', vizzy_msgs.msg.GazeAction,
                                                         goal_cb = goal_callback2),
                                 {'succeeded':'BASE',
                                 'preempted':'done',
@@ -166,8 +166,8 @@ def main():
 
 
         def goal_callback3(userdata, default_goal):
-			goal = move_robot_msgs.msg.GazeGoal()
-			goal.type = move_robot_msgs.msg.GazeGoal.CARTESIAN
+			goal = vizzy_msgs.msg.GazeGoal()
+			goal.type = vizzy_msgs.msg.GazeGoal.CARTESIAN
 			goal.fixation_point_error_tolerance = 0.01
 			goal.fixation_point.point.x = 2
 			goal.fixation_point.point.y = 1
@@ -177,7 +177,7 @@ def main():
 			return goal
 
         smach.StateMachine.add('GOAL_3',
-                                smach_ros.SimpleActionState('gaze', move_robot_msgs.msg.GazeAction,
+                                smach_ros.SimpleActionState('gaze', vizzy_msgs.msg.GazeAction,
                                                         goal_cb = goal_callback3),
                                 {'succeeded':'BASE',
                                 'preempted':'done',
@@ -189,8 +189,8 @@ def main():
 
 
         def goal_callback4(userdata, default_goal):
-			goal = move_robot_msgs.msg.GazeGoal()
-			goal.type = move_robot_msgs.msg.GazeGoal.CARTESIAN
+			goal = vizzy_msgs.msg.GazeGoal()
+			goal.type = vizzy_msgs.msg.GazeGoal.CARTESIAN
 			goal.fixation_point_error_tolerance = 0.01
 			goal.fixation_point.point.x = 2
 			goal.fixation_point.point.y = -1
@@ -200,7 +200,7 @@ def main():
 			return goal
 
         smach.StateMachine.add('GOAL_4',
-                                smach_ros.SimpleActionState('gaze', move_robot_msgs.msg.GazeAction,
+                                smach_ros.SimpleActionState('gaze', vizzy_msgs.msg.GazeAction,
                                                         goal_cb = goal_callback4),
                                 {'succeeded':'BASE',
                                 'preempted':'done',

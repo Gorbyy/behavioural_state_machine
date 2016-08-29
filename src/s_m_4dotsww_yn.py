@@ -7,7 +7,7 @@ import smach_ros
 from std_msgs.msg import String
 
 import actionlib
-import move_robot_msgs.msg
+import vizzy_msgs.msg
 import behavioural_state_machine.msg
 
 
@@ -111,15 +111,15 @@ def monitor_cb_no(ud, msg):
 
 def gazeclient(x,y,z):
 	# Creates the SimpleActionClient, passing the type of the action
-	# (move_robot_msgs.msg.GazeAction) to the constructor.
-	client = actionlib.SimpleActionClient('gaze', move_robot_msgs.msg.GazeAction)
+	# (vizzy_msgs.msg.GazeAction) to the constructor.
+	client = actionlib.SimpleActionClient('gaze', vizzy_msgs.msg.GazeAction)
 
 	# Waits until the action server has started up and started
 	# listening for goals.
 	client.wait_for_server()
 
-	goal = move_robot_msgs.msg.GazeGoal()
-	goal.type = move_robot_msgs.msg.GazeGoal.CARTESIAN
+	goal = vizzy_msgs.msg.GazeGoal()
+	goal.type = vizzy_msgs.msg.GazeGoal.CARTESIAN
 	goal.fixation_point_error_tolerance = 0.01
 	goal.fixation_point.point.x = x
 	goal.fixation_point.point.y = y
