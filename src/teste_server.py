@@ -11,14 +11,8 @@ from behavioural_state_machine.msg import trajectory
 import time
 
 
-
-
-
-
 fs = 100 # sample rate 
 f = 3 # the frequency of the signal
-
-
 
 
 #index on the msg joint_states
@@ -41,21 +35,15 @@ eyes_min=-38*np.pi/180
 eyes_amplitude = eyes_max - eyes_min
 
 
-
 def cb_once(msg):
 	global var
 	var = msg.position
 	sub_once.unregister()
 
-
 def listener():
 	global sub_once
 	sub_once = rospy.Subscriber('/vizzy/joint_states', JointState, cb_once)
 	rospy.wait_for_message('/vizzy/joint_states', JointState)
-
-
-
-
 
 
 class TesteAction(object):
@@ -66,8 +54,8 @@ class TesteAction(object):
 	def __init__(self, name):
 		self._action_name = name
 		self._as = actionlib.SimpleActionServer(self._action_name,
-												behavioural_state_machine.msg.TesteAction, 
-												execute_cb=self.execute_cb, auto_start = False)
+							behavioural_state_machine.msg.TesteAction, 
+							execute_cb=self.execute_cb, auto_start = False)
 		self._as.start()
 
 	def execute_cb(self, goal):
@@ -76,9 +64,8 @@ class TesteAction(object):
 		success = True
 		self._feedback.feed = 0
 		
-		# publish info to the console for the user
+		# publish info to the console for testing purposes
 		print('goal.movement: {}'.format(goal.movement))
-
 
 		self._feedback.feed = 1;      
 
@@ -112,12 +99,6 @@ class TesteAction(object):
 				z.append(-y[i] - var[neck_pan_joint] + var[version_joint])
 
 
-
-
-
-
-
-
 		# check that preempt has not been requested by the client
 		if self._as.is_preempt_requested():
 			rospy.loginfo('%s: Preempted' % self._action_name)
@@ -146,7 +127,6 @@ class TesteAction(object):
 				pub.publish(cena)
 				print ('sending {}...'.format(cena.mov))
 				time.sleep(0.1)
-
 
 			
 if __name__ == '__main__':
