@@ -8,12 +8,10 @@ import time
 
 def talker():
 
-
 	client = MongoClient()
 	#client = MongoClient('localhost', 27017)
 	#client = MongoClient('mongodb://10.0.27.117:27017/')
 	#client = MongoClient('mongodb://192.168.10.4:27017/')
-
 
 	db = client.AHA
 	coll = db.GestureBuildEvents
@@ -31,7 +29,6 @@ def talker():
 	        	pub.publish(doc["gesture"])
 	    except StopIteration:
 	        time.sleep(1)
-
 
 
 if __name__ == '__main__':
