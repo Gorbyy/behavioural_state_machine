@@ -5,14 +5,9 @@ import rospy
 import smach
 import smach_ros
 from std_msgs.msg import String
-
 import actionlib
 import vizzy_msgs.msg
 import behavioural_state_machine.msg
-
-
-
-
 
 
 class Setup(smach.State):
@@ -21,10 +16,6 @@ class Setup(smach.State):
     def execute(self, userdata):
         rospy.sleep(1)
         return 'setup_done'
-
-
-
-
 
 
 class Waiting(smach.State):
@@ -105,17 +96,13 @@ def monitor_cb_no(ud, msg):
         return True
 
 
-
-
-
-
 def gazeclient(x,y,z):
 	# Creates the SimpleActionClient, passing the type of the action
 	# (vizzy_msgs.msg.GazeAction) to the constructor.
 	client = actionlib.SimpleActionClient('gaze', vizzy_msgs.msg.GazeAction)
 
 	# Waits until the action server has started up and started
-	# listening for goals.
+	# listening to goals.
 	client.wait_for_server()
 
 	goal = vizzy_msgs.msg.GazeGoal()
@@ -129,15 +116,7 @@ def gazeclient(x,y,z):
 
 	# Sends the goal to the action server.
 	client.send_goal(goal)
-
-	# Waits for the server to finish performing the action.
-	#client.wait_for_result()
-
 	return client.get_result()
-
-
-
-
 
 
 def yesnoclient(mov):
@@ -159,13 +138,7 @@ def yesnoclient(mov):
     client.wait_for_result()
 
     # Prints out the result of executing the action
-    return client.get_result()  # A FibonacciResult
-
-
-
-
-
-
+    return client.get_result()
 
 
 class gaze1(smach.State):
@@ -217,34 +190,24 @@ class no(smach.State):
         return 'succeeded'
 
 
-
-
-# main
 def main():
 
     rospy.init_node('s_m', anonymous=True)
 
-
     base = smach.Concurrence(outcomes=['looking1', 'looking2', 'looking3', 'looking4',
-                                        'moving_yes', 'moving_no','base_reset'],
-                                            default_outcome='base_reset',
-                                            child_termination_cb=child_term_cb,
-                                            outcome_cb=out_cb)
+                                       'moving_yes', 'moving_no','base_reset'],
+                             default_outcome='base_reset',
+                             child_termination_cb=child_term_cb,
+                             outcome_cb=out_cb)
 
     with base:
         smach.Concurrence.add('WAITING', Waiting())
-        smach.Concurrence.add('SENSOR1', smach_ros.MonitorState("chat",
-                                                                String, monitor_cb1))
-        smach.Concurrence.add('SENSOR2', smach_ros.MonitorState("chat",
-                                                                String, monitor_cb2))
-        smach.Concurrence.add('SENSOR3', smach_ros.MonitorState("chat",
-                                                                String, monitor_cb3))
-        smach.Concurrence.add('SENSOR4', smach_ros.MonitorState("chat",
-                                                                String, monitor_cb4))
-        smach.Concurrence.add('SENSOR_YES', smach_ros.MonitorState("chat",
-                                                                String, monitor_cb_yes))
-        smach.Concurrence.add('SENSOR_NO', smach_ros.MonitorState("chat",
-                                                                String, monitor_cb_no))
+        smach.Concurrence.add('SENSOR1', smach_ros.MonitorState("chat", String, monitor_cb1))
+        smach.Concurrence.add('SENSOR2', smach_ros.MonitorState("chat", String, monitor_cb2))
+        smach.Concurrence.add('SENSOR3', smach_ros.MonitorState("chat", String, monitor_cb3))
+        smach.Concurrence.add('SENSOR4', smach_ros.MonitorState("chat", String, monitor_cb4))
+        smach.Concurrence.add('SENSOR_YES', smach_ros.MonitorState("chat", String, monitor_cb_yes))
+        smach.Concurrence.add('SENSOR_NO', smach_ros.MonitorState("chat", String, monitor_cb_no))
 
     # Create a SMACH state machine
     sm = smach.StateMachine(outcomes=['done'])
@@ -252,37 +215,26 @@ def main():
     # Open the container
     with sm:
 
-
         smach.StateMachine.add('SETUP', Setup(), transitions={'setup_done':'BASE'})
         smach.StateMachine.add('BASE', base, transitions={'looking1':'GOAL_1',
-        													'looking2':'GOAL_2',
-        													'looking3':'GOAL_3',
-        													'looking4':'GOAL_4',
-                                                            'moving_yes':'GOAL_YES',
-                                                            'moving_no':'GOAL_NO',
-                                                            'base_reset':'BASE'})
-
-
-
+        						  'looking2':'GOAL_2',
+        						  'looking3':'GOAL_3',
+        						  'looking4':'GOAL_4',
+                                                          'moving_yes':'GOAL_YES',
+                                                          'moving_no':'GOAL_NO',
+                                                          'base_reset':'BASE'})
         smach.StateMachine.add('GOAL_1', gaze1(), {'succeeded':'BASE'})
-
         smach.StateMachine.add('GOAL_2', gaze2(), {'succeeded':'BASE'})
-
         smach.StateMachine.add('GOAL_3', gaze3(), {'succeeded':'BASE'})
-
         smach.StateMachine.add('GOAL_4', gaze4(), {'succeeded':'BASE'})
-
         smach.StateMachine.add('GOAL_YES', yes(), {'succeeded':'BASE'})
-
         smach.StateMachine.add('GOAL_NO', no(), {'succeeded':'BASE'})
-
 
 	sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
 	sis.start()
+	
     # Execute SMACH plan
     outcome = sm.execute()
-
-	#sis.stop()
 
 if __name__ == '__main__':
     main()
